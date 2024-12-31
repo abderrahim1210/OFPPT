@@ -1,0 +1,947 @@
+/*
+	By Osvaldas Valutis, www.osvaldas.info
+	Available for use under the MIT License
+*/
+
+'use strict';
+
+;
+(function (document, window, index) {
+  var inputs = document.querySelectorAll('.inputfile');
+  Array.prototype.forEach.call(inputs, function (input) {
+    var label = input.nextElementSibling,
+      labelVal = label.innerHTML;
+
+    input.addEventListener('change', function (e) {
+      var fileName = '';
+      if (this.files && this.files.length > 1)
+        fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+      else
+        fileName = e.target.value.split('\\').pop();
+
+      if (fileName)
+        label.querySelector('span').innerHTML = fileName;
+      else
+        label.innerHTML = labelVal;
+    });
+
+    // Firefox bug fix
+    input.addEventListener('focus', function () {
+      input.classList.add('has-focus');
+    });
+    input.addEventListener('blur', function () {
+      input.classList.remove('has-focus');
+    });
+  });
+}(document, window, 0));
+
+$(document).ready(function () {
+
+  // $('.hfm-filter_form-wrap .tab header').click(function() {
+  //     var _self = $(this),
+  //         _tab = $(this).closest('.tab');
+
+  //     if (_tab.hasClass('active')) {
+
+  //         _tab.find('.htm-form-wrap').slideUp();
+  //         _tab.siblings('.tab').find('.htm-form-wrap').slideDown();
+  //         _tab.removeClass('active').addClass('collapsed');
+  //         _tab.siblings('.tab').removeClass('collapsed').addClass('active');
+  //         _tab.find('.fa').removeClass('fa-minus').addClass('fa-plus');
+  //         _tab.siblings('.tab').find('.fa').removeClass('fa-plus').addClass('fa-minus');
+  //     } else {
+
+  //         _tab.find('.htm-form-wrap').slideDown();
+  //         _tab.siblings('.tab').find('.htm-form-wrap').slideUp();
+  //         _tab.removeClass('collapsed').addClass('active');
+  //         _tab.siblings('.tab').removeClass('active').addClass('collapsed');
+  //         _tab.find('.fa').removeClass('fa-plus').addClass('fa-minus');
+  //         _tab.siblings('.tab').find('.fa').removeClass('fa-minus').addClass('fa-plus');
+  //     }
+  // });
+
+
+
+  // //Select sorting
+  // // Loop for each select element on the page.
+  // $("select").each(function() {
+  //   // Keep track of the selected option.
+  //   var selectedValue = $(this).val();
+
+  //   // Sort all the options by text. I could easily sort these by val.
+  //   $(this).html($("option", $(this)).sort(function(a, b) {
+  //     return a.text == b.text ? 0 : a.text < b.text ? -1 : 1
+  //   }));
+
+  //   // Select one option.
+  //   $(this).val(selectedValue);
+    
+  // });
+
+
+ 
+
+  /// COUNTER
+  var a = 0;
+  $(window).scroll(function () {
+    if ($("#counter-scroll").length) {
+      var oTop = $('#counter-scroll').offset().top - window.innerHeight;
+      if (a == 0 && $(window).scrollTop() > oTop) {
+        $('.counter-value').each(function () {
+          var $this = $(this),
+            countTo = $this.attr('data-count');
+          $({
+            countNum: $this.text()
+          }).animate({
+              countNum: countTo
+            },
+
+            {
+
+              duration: 2000,
+              easing: 'swing',
+              step: function () {
+                $this.text(Math.floor(this.countNum));
+              },
+              complete: function () {
+                $this.text(this.countNum);
+                //alert('finished');
+              }
+
+            });
+        });
+        a = 1;
+      }
+    }
+  });
+
+  var a = 0;
+  console.log('3');
+  if ($("#counter-load").length) {
+    console.log("1");
+    var oTop = $('#counter-load').offset().top - window.innerHeight;
+    if (a == 0 && $(window).scrollTop() > oTop) {
+      $('.counter-value').each(function () {
+        var $this = $(this),
+          countTo = $this.attr('data-count');
+        $({
+          countNum: $this.text()
+        }).animate({
+            countNum: countTo
+          },
+
+          {
+
+            duration: 2000,
+            easing: 'swing',
+            step: function () {
+              $this.text(Math.floor(this.countNum));
+            },
+            complete: function () {
+              $this.text(this.countNum);
+              //alert('finished');
+            }
+
+          });
+      });
+      a = 1;
+    }
+  }
+  //END COUNTER
+
+
+  var rtl = $('html').attr('dir') == 'rtl' ? true : false;
+
+  $('.search-overlay .form-item-k.js-form-item-k').addClass('cursor');
+  $('.search-overlay input[type="text"]').focus(function () {
+    $(this).closest('.cursor').removeClass('cursor');
+  });
+
+  // open search overlay
+  $('.main-menu-wrap .fa-search').click(function () {
+    if (!$('.search-overlay .form-item-k.js-form-item-k').hasClass('cursor')) {
+      $('.search-overlay .form-item-k.js-form-item-k').addClass('cursor');
+    }
+    $('body').addClass('open-mobile-menu');
+    $('.dialog-off-canvas-main-canvas').addClass('search-overlay-hide-toolbar');
+    //$('.search-overlay input[type="text"]').focus();
+    $('.search-overlay').fadeIn();
+  });
+
+  // close search overlay
+  $('.search-overlay .s-close').click(function () {
+    $('body').removeClass('open-mobile-menu');
+    $('.dialog-off-canvas-main-canvas').removeClass('search-overlay-hide-toolbar');
+    $(this).closest('.search-overlay').fadeOut();
+  });
+
+  // close search overlay when ESCAPE key pressed
+  $(document).keydown(function (e) {
+    if (e.keyCode == 27) {
+      $('body').removeClass('open-mobile-menu');
+      $('.dialog-off-canvas-main-canvas').removeClass('search-overlay-hide-toolbar');
+      $('.search-overlay').hide();
+    }
+  });
+
+  if ($(window).width() < 813) {
+    // element to detect scroll direction of, & initialize last scroll position
+    var el = $(window),
+      lastY = el.scrollTop();
+
+    el.on('scroll', function () {
+      // get current scroll position
+      var currY = el.scrollTop();
+
+      // determine current scroll direction
+      var y = (currY > lastY) ? 'down' : ((currY === lastY) ? 'none' : 'up');
+
+      if (currY > lastY) {
+        // down
+        $('.insc-online, .si-block.si-home, .top-btn').hide(200);
+
+      } else if (currY !== lastY) {
+        // up
+        $('.insc-online, .si-block.si-home, .top-btn').show(200);
+
+      }
+
+      // update last scroll position to current position
+      lastY = currY;
+    });
+  }
+  $(".top-btn").click(function () {
+    $("html, body").animate({
+      scrollTop: 0
+    }, "slow");
+    return false;
+  });
+
+  $('.criteres-wrp a').click(function () {
+    $(this).find('.hide').toggle();
+    $(this).find('.show').toggle();
+    $(this).siblings('.fa').toggleClass('fa-caret-down fa-caret-up');
+    $('.criteres-wrp .row').slideToggle();
+  });
+
+  if ($('#homeCarousel')) {
+    $('#homeCarousel').carousel();
+  }
+
+  //$('.card-header').first().addClass('open');
+
+  $('.collapse').on('show.bs.collapse', function () {
+    $(this).siblings('.card-header').removeClass('closed').addClass('open');
+  });
+  $('.collapse').on('hidden.bs.collapse', function () {
+    $(this).siblings('.card-header').removeClass('open').addClass('closed');
+  });
+
+
+
+
+  /* TEST */
+
+  var lightSlider = $('#lightSlider').lightSlider({
+    rtl : true,
+    item: 1,
+    loop: true,
+    slideMargin: 0,
+    auto: true,
+    pager: true,
+    controls: true,
+    speed: 600,
+    pause: 4000,
+  });
+
+  $('.sl-slider .pager .prev').click(function () {
+    lightSlider.goToPrevSlide();
+  });
+  $('.sl-slider .pager .next').click(function () {
+    lightSlider.goToNextSlide();
+  });
+
+
+  
+
+
+
+
+
+
+  // var lSSlideWrapper = $('.phototheque-detail ul').lightSlider({
+  //   auto: true,
+  //   pager: false,
+  //   controls: false,
+  //   loop: true,
+  //   speed: 600,
+  //   pause: 4000,
+  //   rtl: false,
+  //   responsive: [{
+  //       breakpoint: 767,
+  //       settings: {
+  //         item: 2,
+  //       }
+  //     },
+  //     {
+  //       breakpoint: 480,
+  //       settings: {
+  //         item: 1,
+  //       }
+  //     }
+  //   ],
+  
+  // });
+  // $('.phototheque-detail .pd-slider .pager .prev').click(function () {
+  //   lSSlideWrapper.goToPrevSlide();
+  // });
+  // $('.phototheque-detail .pd-slider .pager .next').click(function () {
+  //   lSSlideWrapper.goToNextSlide();
+  // });
+
+  
+  var etab_slider = $('.etablissments-slider-wrap ul').lightSlider({
+    auto: true,
+    pager: false,
+    controls: false,
+    loop: true,
+    speed: 600,
+    pause: 4000,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 800,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+  $('.etablissments-slider-wrap .pager .prev').click(function () {
+    etab_slider.goToPrevSlide();
+  });
+  $('.etablissments-slider-wrap .pager .next').click(function () {
+    etab_slider.goToNextSlide();
+  });
+
+  /* =============================================================== */
+
+  // default partners slider
+  var partners_slider4 = $('#home-partenaires-slider').lightSlider({
+    auto: true,
+    item: 4,
+    controls: false,
+    loop: true,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 991,
+        settings: {
+          item: 3,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+  $('.default-prtnr-section .pager .prev, .homepage-prtnr-section .pager .prev').click(function () {
+    partners_slider4.goToPrevSlide();
+  });
+  $('.default-prtnr-section .pager .next, .homepage-prtnr-section .pager .next').click(function () {
+    partners_slider4.goToNextSlide();
+  });
+
+  // homepage partners slider
+  var partners_slider3 = $('#home-partenaires-slider-3').lightSlider({
+    items: 3,
+    auto: true,
+    controls: false,
+    loop: true,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+  $('.homepage-prtnr-section .pager .prev').click(function () {
+    partners_slider3.goToPrevSlide();
+  });
+  $('.homepage-prtnr-section .pager .next').click(function () {
+    partners_slider3.goToNextSlide();
+  });
+
+
+  // Aliance partners slider
+  var partners_slider5 = $('#home-partenaires-five-items').lightSlider({
+    auto: true,
+    item: 5,
+    controls: false,
+    loop: true,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 991,
+        settings: {
+          item: 4,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+  $('.pays-membres-aliance .pager .prev').click(function () {
+    partners_slider5.goToPrevSlide();
+  });
+  $('.pays-membres-aliance .pager .next').click(function () {
+    partners_slider5.goToNextSlide();
+  });
+
+  /* =============================================================== */
+
+  var tv_first_slider = $('#tv-first-slider ul').lightSlider({
+    item: 2,
+    rtl: rtl,
+    pager: false,
+    //adaptiveHeight: true,
+    responsive: [{
+      breakpoint: 767,
+      settings: {
+        item: 1,
+      }
+    }]
+  });
+  $('#tv-first-slider .slider-pager .prev').click(function () {
+    tv_first_slider.goToPrevSlide();
+  });
+  $('#tv-first-slider .slider-pager .next').click(function () {
+    tv_first_slider.goToNextSlide();
+  });
+
+  $('.last-videos .ls-wrp').lightSlider({
+    item: 4,
+    pager: false,
+    controls: false,
+    slideMargin: 0,
+    rtl: false,
+    responsive: [{
+        breakpoint: 991,
+        settings: {
+          item: 3,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+
+  var slides_count = $('.od-offres-slider ul li').length;
+  var offres_slider = $('.od-offres-slider ul').lightSlider({
+    item: 2,
+    controls: false,
+    slideMove: 2,
+    pager: false,
+  });
+  $('.od-offres-slider .od-slider-pager .prev').click(function () {
+    offres_slider.goToPrevSlide();
+  });
+  $('.od-offres-slider .od-slider-pager .next').click(function () {
+    offres_slider.goToNextSlide();
+  });
+  $('.od-offres-slider .od-slider-pager2 .first').click(function () {
+    offres_slider.goToSlide(0);
+  });
+  $('.od-offres-slider .od-slider-pager2 .last').click(function () {
+    offres_slider.goToSlide(slides_count + 1);
+  });
+
+  var pd_slider = $('.pd-slider ul').lightSlider({
+    item: 1,
+    pager: true,
+    controls: false,
+  });
+  $('.pd-slider .pager .prev').click(function () {
+    pd_slider.goToPrevSlide();
+  });
+  $('.pd-slider .pager .next').click(function () {
+    pd_slider.goToNextSlide();
+  });
+
+  var hsb_slider = $('.hsb-wrap.hsb-home').lightSlider({
+    item: 5,
+    pager: true,
+    controls: false,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 1199,
+        settings: {
+          item: 4,
+        }
+      },
+      {
+        breakpoint: 991,
+        settings: {
+          item: 3,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+
+  $('.ofppt-tv-ms .last-videos .ls-wrp').lightSlider({
+    item: 4,
+    pager: false,
+    controls: false,
+    slideMargin: 0,
+    rtl: rtl,
+    responsive: [{
+        breakpoint: 991,
+        settings: {
+          item: 3,
+        }
+      },
+      {
+        breakpoint: 767,
+        settings: {
+          item: 2,
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          item: 1,
+        }
+      }
+    ]
+  });
+
+  $('.banner-slider').lightSlider({
+    auto: true,
+    speed: 1000,
+    item: 1,
+    loop: true,
+    pager: false,
+  });
+
+  /*
+  var last_vids_slider = $('.last-videos .ls-wrp').lightSlider({
+      item: 5,
+      pager: true,
+      controls: false,
+      slideMargin: 0,
+  });
+  $('#last-videos-slider-wp .pager .prev').hover(function() {
+      last_vids_slider.goToPrevSlide();
+  });
+  $('#last-videos-slider-wp .pager .next').hover(function() {
+      last_vids_slider.goToNextSlide();
+  });
+  */
+  /*
+  if ($('.grid')) {
+      $('.grid').masonry({
+          itemSelector: '.grid-item',
+          columnWidth: 361,
+          gutter: 20
+      });
+  }
+  */
+  /*
+  // $(function() {
+  //     $().timelinr({
+  //         autoPlay: 'false',
+  //         startAt: 1
+  //     })
+  // });
+  */
+
+  $('.mobile-menu-trigger').click(function () {
+    $('body').toggleClass('open-mobile-menu');
+    $('.mobile-menu').toggleClass('open');
+  });
+
+  //    $(document).on('change', ".sector_cours_soir", function () {
+  //        $(".subsector_cours_soir").children('option:not(:first)').remove();
+  //        var sector_parent = $(".sector_cours_soir").val();
+  //
+  //        
+  //            var url = drupalSettings.path.baseUrl + language_id + '/sectors_sub_level';
+  //        
+  //        $.ajax({
+  //            type: 'POST',
+  //            url: url,
+  //            dataType: 'json',
+  //            data: 'sector=' + sector_parent,
+  //            success: function (data) {
+  //                var sectors = [sector_parent];
+  //                $.each(data, function (i, item) {
+  //                    sectors.push(i);
+  //                    $(".subsector_cours_soir").append($('<option>', {
+  //                        value: i,
+  //                        text: item
+  //                    }));
+  //
+  //                });
+  //
+  //                $(".field_secteur_cours_soir").val(sectors);
+  //            }
+  //        });
+  //    });
+
+  //    $(document).on('change', ".subsector_cours_soir", function () {
+  //        
+  //          var url = drupalSettings.path.baseUrl + language_id + '/sectors_sub_level';
+  //        
+  //
+  //        if ($('.subsector_cours_soir').val() != "All") {
+  //            $('.field_secteur_cours_soir').val($('.subsector_cours_soir').val());
+  //        } else {
+  //
+  //
+  //            var sector_parent = $(".sector_cours_soir").val();
+  //            $.ajax({
+  //                type: 'POST',
+  //                url: url,
+  //                dataType: 'json',
+  //                data: 'sector=' + sector_parent,
+  //                success: function (data) {
+  //                    var sectors = [sector_parent];
+  //                    $.each(data, function (i, item) {
+  //                        sectors.push(i);
+  //                        $(".subsector_cours_soir").append($('<option>', {
+  //                            value: i,
+  //                            text: item
+  //                        }));
+  //
+  //                    });
+  //
+  //                    $(".field_secteur_cours_soir").val(sectors);
+  //                }
+  //            });
+  //        }
+  //    });
+  //
+  //
+  //
+  //    // Domaine est sous domaine : formation entreprise
+  //    $(document).on('change', ".domaine_formations_entreprise", function () {
+  //      $(".sous_domaine_formations_entreprise").children('option:not(:first)').remove();
+  //      var domaine_parent = $(".domaine_formations_entreprise").val();
+  //
+  //        var url = drupalSettings.path.baseUrl + language_id + '/fields_sub_level';
+  //
+  //      $.ajax({
+  //        type: 'POST',
+  //        url: url,
+  //        dataType: 'json',
+  //        data: 'domaine=' + domaine_parent,
+  //        success: function (data) {
+  //          var domaines = [domaine_parent];
+  //          $.each(data, function (i, item) {
+  //            domaines.push(i);
+  //            $(".sous_domaine_formations_entreprise").append($('<option>', {
+  //              value: i,
+  //              text: item
+  //            }));
+  //
+  //          });
+  //
+  //          $(".field_domaine_formations_entreprise").val(domaines);
+  //        }
+  //      });
+  //    });
+  //
+  //    $(document).on('change', ".sous_domaine_formations_entreprise", function () {
+  //      
+  //        var url = drupalSettings.path.baseUrl + language_id + '/fields_sub_level';
+  //
+  //      if ($('.sous_domaine_formations_entreprise').val() != "All") {
+  //        $('.field_domaine_formations_entreprise').val($('.sous_domaine_formations_entreprise').val());
+  //      } else {
+  //
+  //
+  //        var domaine_parent = $(".domaine_formations_entreprise").val();
+  //        $.ajax({
+  //          type: 'POST',
+  //          url: url,
+  //          dataType: 'json',
+  //          data: 'domaine=' + domaine_parent,
+  //          success: function (data) {
+  //            var domaines = [domaine_parent];
+  //            $.each(data, function (i, item) {
+  //              domaines.push(i);
+  //              $(".sous_domaine_formations_entreprise").append($('<option>', {
+  //                value: i,
+  //                text: item
+  //              }));
+  //
+  //            });
+  //
+  //            $(".field_domaine_formations_entreprise").val(domaines);
+  //          }
+  //        });
+  //      }
+  //    });
+
+  $(".hfm-filter_form-wrap .tab .card-header button").click(function () {
+    if ($(this).closest('header').hasClass('open')) {
+      return false;
+    }
+  });
+
+  $(window).scroll(function () {
+    if ($(window).scrollTop() >= 300) {
+      $('header.header').addClass('fixed-header');
+    } else {
+      $('header.header').removeClass('fixed-header');
+    }
+  });
+
+  if (typeof $().fancybox === 'function') {
+    $('[data-fancybox]').fancybox({
+      thumbs: false,
+      hash: true,
+      loop: false,
+      keyboard: false,
+      toolbar: true,
+      animationEffect: false,
+      arrows: false,
+      clickContent: false,
+      type: 'iframe'
+    });
+  }
+
+  // add classes to table
+  $('table').addClass('table table-bordered table-hover');
+
+  // add languages list to mobile menu
+  $('.mobile-menu .language-switcher .has-submenu ul').prepend($('#block-languageswitcher ul li'));
+
+
+
+  $('.footer .footer-menu-wrap ul').first().slideDown();
+  $('.footer .footer-menu-wrap h3').click(function () {
+    if ($(this).siblings('ul').css('display') == 'block') {
+      return
+    }
+    $('.footer .footer-menu-wrap ul').slideUp();
+    $(this).siblings('ul').slideToggle();
+  });
+
+  $(".side-navbar .card-body").each(function () {
+    var $card_parent = $(this).closest('.card');
+    var $href = $(this).find('a').attr('href');
+
+    if (location.href == $href) {
+      $($card_parent).siblings('.card').find('.card-header').removeClass('open').siblings('.collapse').removeClass('show');
+      $($card_parent).find('.card-header').addClass('open').siblings('.collapse').addClass('show');
+    }
+  });
+
+  //    $('<img src="../images/filter_loader.gif" id="filter_loader">').insertBefore('.criteres-wrp #edit-sector');
+  $('<img src="https://i.gifer.com/ZZ5H.gif" id="filter_loader">').insertBefore('.criteres-wrp #edit-sector');
+  $('<img src="https://i.gifer.com/ZZ5H.gif" id="filter_loader">').insertBefore('.criteres-wrp #edit-domaine');
+
+
+});
+
+(function ($) {
+
+  var touchStartX = null;
+
+  $('.carousel').each(function () {
+    var $carousel = $(this);
+    $(this).on('touchstart', function (event) {
+      var e = event.originalEvent;
+      if (e.touches.length == 1) {
+        var touch = e.touches[0];
+        touchStartX = touch.pageX;
+      }
+    }).on('touchmove', function (event) {
+      var e = event.originalEvent;
+      if (touchStartX != null) {
+        var touchCurrentX = e.changedTouches[0].pageX;
+        if ((touchCurrentX - touchStartX) > 60) {
+          touchStartX = null;
+          $carousel.carousel('prev');
+        } else if ((touchStartX - touchCurrentX) > 60) {
+          touchStartX = null;
+          $carousel.carousel('next');
+        }
+      }
+    }).on('touchend', function () {
+      touchStartX = null;
+    });
+  });
+
+  $('.share-zoom-icons a').on('click', function (e) {
+    e.preventDefault();
+
+    function zoomIn() {
+      if (parseInt($('.text-wysiwyg').css('font-size')) + 1 > 18) {
+        return false;
+      }
+      $('.text-wysiwyg').css({
+        'font-size': (parseInt($('.text-wysiwyg').css('font-size')) + 1) + 'px'
+      });
+    }
+
+    function zoomOut() {
+      if (parseInt($('.text-wysiwyg').css('font-size')) - 1 === 11) {
+        return false;
+      }
+      $('.text-wysiwyg').css({
+        'font-size': (parseInt($('.text-wysiwyg').css('font-size')) - 1) + 'px'
+      });
+    }
+
+    function zoomReset() {
+      $('.text-wysiwyg').removeAttr('style');
+    }
+    switch ($(this).attr('id')) {
+      case 'zoom_in':
+        zoomIn();
+        break;
+      case 'zoom_reset':
+        zoomReset();
+        break;
+      case 'zoom_out':
+        zoomOut();
+        break;
+    }
+  });
+
+  // $(".loader-etalissement, .loader-formation").after("<img src='https://i.gifer.com/1amw.gif' >");     
+  //$(".loader-etalissement, .loader-formation").after("<img src='../images/map-loader.gif' >");
+
+  // Reponsive menu
+  Breakpoints({
+    mobile: {
+      min: 0,
+      max: 767
+    },
+    tablet: {
+      min: 768,
+      max: 991
+    },
+    desktop: {
+      min: 992,
+      max: Infinity
+    }
+  });
+
+// ==============================================================\\
+// Added by FILALI Anas - TheNextClic TNC
+// add utms if passed in the URL to "inscription" link in HomePage
+
+if($(".insc-online.io-home a").length){
+  const utms = ['utm_campaign', 'utm_medium', 'utm_content', 'utm_source'];
+  var redirectUrl = $('.insc-online.io-home a').first().attr('href');
+  redirectUrl = (redirectUrl.includes('?')) ? redirectUrl : redirectUrl+"?";
+
+  const eLocation = window.location.toString();
+  const querystring = eLocation.split('?');
+  if (querystring.length > 1) {
+    const pairs = querystring[1].split('&');
+    for (let i in pairs) {
+      const keyVal = pairs[i].split('=');
+      if (utms.includes(keyVal[0])) {
+        redirectUrl += keyVal[0] + '=' + decodeURIComponent(keyVal[1]) + '&';
+      }
+    }
+  }
+  $('.insc-online.io-home a').attr('href', redirectUrl); 
+}
+if($("#registration-form").length){
+  const utms = ['utm_campaign', 'utm_medium', 'utm_content', 'utm_source'];
+  var redirectUrl = "https://takwine.ofppt.ma/konosys/PC_MV_login.aspx?";
+
+  const eLocation = window.location.toString();
+  const querystring = eLocation.split('?');
+  if (querystring.length > 1) {
+    const pairs = querystring[1].split('&');
+    for (let i in pairs) {
+      const keyVal = pairs[i].split('=');
+      if (utms.includes(keyVal[0])) {
+        redirectUrl += keyVal[0] + '=' + decodeURIComponent(keyVal[1]) + '&';
+      }
+    }
+  }
+  redirectUrl += 'CONNECTION_ANONYMOUS=anonymous&ReturnUrl=%2fkonosys%2finterfaces%2finterface_anonyme_formulaireInscription_etape1.aspx';
+  $('#registration-form').attr('src', redirectUrl);
+}
+//============ END TNC custom script ============= \\
+
+if($("#registration-form").length){
+  const utms = ['utm_campaign', 'utm_medium', 'utm_content', 'utm_source'];
+  var redirectUrl = "https://takwine.ofppt.ma/konosys/PC_MV_login.aspx?";
+
+  const eLocation = window.location.toString();
+  const querystring = eLocation.split('?');
+  if (querystring.length > 1) {
+    const pairs = querystring[1].split('&');
+    for (let i in pairs) {
+      const keyVal = pairs[i].split('=');
+      if (utms.includes(keyVal[0])) {
+        redirectUrl += keyVal[0] + '=' + decodeURIComponent(keyVal[1]) + '&';
+      }
+    }
+  }
+  redirectUrl += 'CONNECTION_ANONYMOUS=anonymous&ReturnUrl=%2fkonosys%2finterfaces%2finterface_anonyme_formulaireInscription_etape1.aspx';
+  $('#registration-form').attr('src', redirectUrl);
+}
+//============ END TNC custom script ============= \\
+
+})(jQuery)
